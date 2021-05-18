@@ -1,0 +1,13 @@
+
+wget
+torch==1.8.0
+transformers==4.5.1
+tokenizers==0.10.2
+pytorch_transformers
+overrides
+torch
+tensorboard
+pandas
+pyyaml
+matplotlib
+sklearn
