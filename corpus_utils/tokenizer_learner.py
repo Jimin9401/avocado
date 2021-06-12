@@ -11,7 +11,7 @@ import pandas as pd
 
 
 class Learner:
-    def __init__(self, args, config, pretrain_tokenizer, domain_tokenizer, init_feritility=3):
+    def __init__(self, args, config, pretrain_tokenizer, domain_tokenizer, init_feritility=2):
         self.args = args
         self.config = config
 
@@ -46,7 +46,7 @@ class Learner:
         domain_vocab = self.domain_tokenizer.get_vocab().items()
         ps = sorted(domain_vocab, key=lambda x: x[-1])
 
-        init = 1000
+        init = 500
         candidate_vocab = [k for k, _ in ps if k not in pretrain_vocab]
         for_save = []
         init_func = self.init_long_corpus

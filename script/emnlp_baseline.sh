@@ -1,7 +1,7 @@
 
 EC=bert-base-uncased # specify encoder
-Data=citation_intent # specify dataset
-NGPU=0
+Data=amazon # specify dataset
+NGPU=4
 CHECKPOINT=../ # specify checkpoint
 
 
