@@ -306,6 +306,8 @@ class ContrastiveTrainer(Trainer):
             f1 = f1_score(true_buff,eval_buff,labels=list(range(0,self.n_label)),average="micro")
         else :
             f1 = f1_score(true_buff,eval_buff,labels=list(range(0,self.n_label)),average="macro")
+
+        print()
         print("test accuracy: {0:.4f}  test f1: {1:.4f}".format(accuracy, f1))
 
         return accuracy, f1

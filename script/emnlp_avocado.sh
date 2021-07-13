@@ -11,9 +11,9 @@ LI=5
 AT=simclr
 CHECKPOINT=../ # specify checkpoint
 
-for Data in citation_intent hyperpartisan_news
+for Data in hyperpartisan_news
 do
-  for T in 3.0
+  for T in 0.5 1.0 1.5 2.0 2.5 3.0
   do
     for S in 1994 1996 2015 1113 777
       do

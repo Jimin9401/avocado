@@ -25,6 +25,7 @@ def transfer_embedding(transfer_model, d2p, type):
                 transfer_embeddings = torch.cat([transfer_layer.weight[t_id].data.view(1, -1) for t_id in transfer_ids],
                                                 dim=0)
                 embedding_layer.weight.data[embedding_id] = torch.mean(transfer_embeddings, dim=0)
+
             except:
                 logger.info("random initialize on %s" % (embedding_id))
                 pass
