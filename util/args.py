@@ -17,15 +17,14 @@ class ExperimentArgument:
 
     def get_args(self):
         parser = argparse.ArgumentParser()
-        parser.add_argument("--dataset", choices=["chemprot","citation_intent", "hyperpartisan_news",
-                                                  "amazon" ], required=True,
-
-                            type=str)
+        parser.add_argument("--dataset", choices=["chemprot", "citation_intent", "hyperpartisan_news",
+                                                  "amazon"], required=True, type=str)
 
         parser.add_argument("--root", type=str, required=True)
         parser.add_argument("--encoder_class",
                             choices=["bert-base-uncased", "dmis-lab/biobert-base-cased-v1.1",
-                                     "nfliu/scibert_basevocab_uncased","allenai/scibert_scivocab_uncased"],
+                                     "nfliu/scibert_basevocab_uncased", "allenai/scibert_scivocab_uncased",
+                                     "xlnet-base-cased", "roberta-base", "google/electra-small-discriminator"],
                             required=True, type=str)
 
         parser.add_argument("--n_epoch", default=10, type=int)
@@ -64,19 +63,18 @@ class ExperimentArgument:
         parser.add_argument("--vocab_size", type=int)
         parser.add_argument("--use_fragment", action="store_true")
 
-        parser.add_argument("--transfer_type", choices=["random", "average_input"],default="average_input",
+        parser.add_argument("--transfer_type", choices=["random", "average_input"], default="average_input",
                             type=str)
 
         return parser
 
     def set_savename(self):
 
-        if self.data["align_type"]=="average" and self.data["layer_index"]==-1:
+        if self.data["align_type"] == "average" and self.data["layer_index"] == -1:
             raise ValueError
 
         self.data["savename"] = os.path.join(self.data["checkpoint_dir"], self.data["dataset"], str(self.data["seed"]),
                                              self.data["encoder_class"])
-
 
         if self.data["exbert"]:
             self.data["savename"] += "_exbert"
@@ -95,8 +93,8 @@ class ExperimentArgument:
 
         if self.data["contrastive"]:
 
-            if self.data["prototype"]=="average":
-                self.data["savename"] += "_{0}_{1}".format(self.data["prototype"],self.data["layer_index"])
+            if self.data["prototype"] == "average":
+                self.data["savename"] += "_{0}_{1}".format(self.data["prototype"], self.data["layer_index"])
             else:
                 self.data["savename"] += "_{0}".format(self.data["prototype"])
             self.data["savename"] += "_contrastive"
@@ -114,7 +112,6 @@ class ExperimentArgument:
                                                    self.data["encoder_class"] + "-merged-vocabulary_{}".format(
                                                        self.data["vocab_size"]))
 
-
         if not os.path.isdir(self.data["savename"]):
             os.makedirs(self.data["savename"])
 
@@ -129,19 +126,20 @@ class ExperimentArgument:
             if self.data["exbert"]:
                 self.data["test_dir"] += "_exbert"
 
-
             if self.data["merge_version"]:
                 if self.data["use_fragment"]:
                     self.data["model_path"] += "_{0}_{1}_{2}".format(self.data["transfer_type"], "optimized",
                                                                      self.data["vocab_size"])
-                    self.data["test_dir"] += "{0}/{1}/{2}".format(self.data["transfer_type"], "optimized", self.data["vocab_size"])
+                    self.data["test_dir"] += "{0}/{1}/{2}".format(self.data["transfer_type"], "optimized",
+                                                                  self.data["vocab_size"])
 
 
                 else:
                     self.data["model_path"] += "_{0}_{1}".format(self.data["transfer_type"],
                                                                  self.data["vocab_size"])
 
-                    self.data["test_dir"] += "{0}/{1}/{2}".format(self.data["transfer_type"], "naive",self.data["vocab_size"])
+                    self.data["test_dir"] += "{0}/{1}/{2}".format(self.data["transfer_type"], "naive",
+                                                                  self.data["vocab_size"])
 
                 if self.data["contrastive"]:
                     self.data["model_path"] += "_{0}".format(self.data["align_type"])
@@ -210,7 +208,8 @@ class CorpusArgument:
 
         parser.add_argument("--encoder_class",
                             choices=["biobert", "bert-base-uncased", "dmis-lab/biobert-base-cased-v1.1",
-                                     "nfliu/scibert_basevocab_uncased"], default="bert-base-uncased", type=str)
+                                     "google/electra-small-discriminator", "nfliu/scibert_basevocab_uncased","roberta-base"],
+                            default="bert-base-uncased", type=str)
         parser.add_argument("--use_fragment", action="store_true")
 
         return parser

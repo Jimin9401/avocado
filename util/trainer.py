@@ -53,9 +53,6 @@ class CFTrainer(Trainer):
         criteria = self.criteria
         optimizer = self.optimizers
 
-        if self.args.dataset=="bio_ner":
-            batchfier.collate=batchfier.collate_ner
-
         if isinstance(batchfier, IterableDataset):
             batchfier = DataLoader(dataset=batchfier,
                                    batch_size=batchfier.size,
@@ -70,10 +67,11 @@ class CFTrainer(Trainer):
         pbar = tqdm(batchfier, total=batchfier.dataset.num_buckets)
 
         for inp in pbar:
-            inp = self.reformat_inp(inp)
-            logits, _ = model(inp[0])
+            inp,attn_mask,gt = self.reformat_inp(inp)
 
-            loss = criteria(logits.view(-1,logits.size(-1)), inp[-1].view(-1))
+            logits, _ = model(inp,attn_mask)
+
+            loss = criteria(logits.view(-1,logits.size(-1)), gt.view(-1))
 
             step_loss += loss.item()
             tot_loss += loss.item()
@@ -155,7 +153,7 @@ class CFTrainer(Trainer):
         true_buff= list(chain(*true_buff))
         eval_buff = list(chain(*eval_buff))
         accuracy = accuracy_score(true_buff,eval_buff)
-
+        print()
         if self.args.dataset =="chemprot":
             f1 = f1_score(true_buff,eval_buff,labels=list(range(0,self.n_label)),average="micro")
         else :

@@ -47,13 +47,13 @@ def add_domain_vocab(args,tokenizer:BertTokenizer,tokenizer_class,config,domain_
         f = open(os.path.join(vocab_path, "vocab.txt"), "a")
     elif args.src_model=="roberta":
         import json
+
         with open(os.path.join(vocab_path, "vocab.json"), "r") as f:
             vocab_file = json.load(f)
             vocab_file.update({domain_vocab:len(vocab_file)})
 
         with open(os.path.join(vocab_path, "vocab.json"), "w") as f:
             json.dump(vocab_file ,f)
-
         f = open(os.path.join(vocab_path, "merges.txt"), "a")
     else:
         raise NotImplementedError

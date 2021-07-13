@@ -118,21 +118,27 @@ def main():
     gpu = 0
     args.gpu = gpu
     print(args.__dict__)
-    pretrained_config = BertConfig.from_pretrained(args.encoder_class)
+    from transformers import AutoConfig,AutoTokenizer
+    pretrained_config = AutoConfig.from_pretrained(args.encoder_class)
 
     if args.merge_version:
-        tokenizer = BertTokenizer.from_pretrained(args.vocab_path)
+        tokenizer = AutoTokenizer.from_pretrained(args.vocab_path)
 
         if args.contrastive:
-            pretrained_tokenizer = BertTokenizer.from_pretrained(args.encoder_class)
+            pretrained_tokenizer = AutoTokenizer.from_pretrained(args.encoder_class)
         if "uncased" in args.encoder_class:
             args.original_vocab_size = 30522
             args.extended_vocab_size = len(tokenizer) - args.original_vocab_size
+
+        elif "roberta" in args.encoder_class:
+            args.original_vocab_size = 50265
+            args.extended_vocab_size = len(tokenizer) - args.original_vocab_size
+
         else:
             args.original_vocab_size = 28996
             args.extended_vocab_size = len(tokenizer) - args.original_vocab_size
     else:
-        tokenizer = BertTokenizer.from_pretrained(args.encoder_class)
+        tokenizer = AutoTokenizer.from_pretrained(args.encoder_class)
         args.extended_vocab_size = 0
 
     logger.info("\nNew merged Vocabulary size is %s" % (args.extended_vocab_size))
@@ -165,6 +171,7 @@ def main():
         os.makedirs(best_dir)
 
     results = []
+    not_improved = 0
 
     if args.do_train:
         for e in tqdm(range(0, args.n_epoch)):
@@ -181,8 +188,16 @@ def main():
                     optimal_score = macro_f1
                     torch.save(model.state_dict(), os.path.join(best_dir, "best_model.bin"))
                     print("Update Model checkpoints at {0}!! ".format(best_dir))
+                    not_improved = 0
+                else:
+                    not_improved += 1
+
+            if not_improved >= 5:
+                break
+
 
         log_full_eval_test_results_to_file(args, config=pretrained_config, results=results)
+
 
     if args.do_eval:
         accuracy, macro_f1 = trainer.test_epoch()
@@ -192,15 +207,16 @@ def main():
         writer.close()
 
     if args.do_test:
-        original_tokenizer = BertTokenizer.from_pretrained(args.encoder_class)
+        original_tokenizer = AutoTokenizer.from_pretrained(args.encoder_class)
         args.aug_word_length = len(tokenizer) - len(original_tokenizer)
         trainer.test_batchfier = test_gen
         results = []
 
+
         if args.model_path_list == "":
             raise EnvironmentError("require to clarify the argment of model_path")
-
         for model_path in args.model_path_list:
+            print(model_path, "best_model", "best_model.bin")
             state_dict = torch.load(os.path.join(model_path, "best_model", "best_model.bin"))
             model.load_state_dict(state_dict)
             model.eval()

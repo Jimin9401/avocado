@@ -45,7 +45,7 @@ def merge_domain_vocab(args,tokenizer:RobertaTokenizer,config,domain_vocab:dict,
 
     new_vocab=[key for key,v in domain_vocab.items() if key not in pretrained_vocab]
 
-    tokenizer.save_pretrained(vocab_path)
+    # tokenizer.save_pretrained(vocab_path)
     config.save_pretrained(vocab_path)
 
     logger.info("\n Merge domain vocab and pretrained vocab at %s" %(vocab_path) )

@@ -47,39 +47,6 @@ class CustomTokenizer:
 
         for textline in tqdm(textlines):
             f.write(textline + "\n")
-    # def _ner_to_txt(self):
-    #
-    #     import glob
-    #     data_dir = os.path.join(self.dir_path, self.prefix)
-    #
-    #     bio_ner_path = os.path.join(data_dir,"raw")+"/*"
-    #     all_bio_dataset = glob.iglob(bio_ner_path)
-    #     textlines = []
-    #
-    #     for dataset_path in all_bio_dataset:
-    #         print(dataset_path)
-    #         name = 'train.tsv'
-    #         file_path=os.path.join(dataset_path,name)
-    #         with open(file_path,"r") as f:
-    #             entities = f.readlines()
-    #         holder = []
-    #         for entity in entities:
-    #             try:
-    #                 token, tag= entity.replace("\n","").split("\t")
-    #                 holder.append((token,tag))
-    #             except:
-    #                 textlines.append(holder)
-    #                 holder=[]
-    #
-    #     txt_file = os.path.join(data_dir, "train.txt")
-    #     f = open(txt_file, "w")
-    #
-    #     textlines=[" ".join([token for token, tag in example]) for example in textlines]
-    #
-    #     for text in textlines:
-    #         new_string = re.sub('[^a-zA-Z0-9\n\.]', ' ', text)
-    #         new_string = re.sub(' +', ' ', new_string)
-    #         f.write(new_string+"\n")
 
     def train(self):
         # if self.args.dataset=="bio_ner":
@@ -95,7 +62,7 @@ class CustomTokenizer:
         if "uncased" in args.encoder_class:
             self.encoder = encoder_class()
         else:
-            self.encoder = encoder_class(lowercase=False,strip_accents=False)
+            self.encoder = encoder_class(lowercase=False)
 
         self.vocab_size = vocab_size
         # self.vocab_dir=os.path.join(self.dir_path, self.prefix)
@@ -107,31 +74,34 @@ class CustomTokenizer:
         self.src_dir = self.vocab_path
         base_name = os.path.join(self.src_dir, "{0}_{1}".format(self.prefix, vocab_size))
         vocab_name = base_name + '-vocab.txt'
-        if os.path.exists(vocab_name):
-            logger.info('\ntrained encoder loaded')
-            # self.istrained = True
-            return encoder_class.from_file(vocab_name)
+
+        if encoder_class=="bert":
+
+            if os.path.exists(vocab_name):
+                logger.info('\ntrained encoder loaded')
+                # self.istrained = True
+                return encoder_class.from_file(vocab_name)
+            else:
+                # self.istrained = False
+                logger.info('\nencoder needs to be trained')
+                self.train()
+                return self.encoder
         else:
-            # self.istrained = False
-            logger.info('\nencoder needs to be trained')
-            self.train()
-            return self.encoder
-        # else:
-        #     vocab_name = base_name + '-vocab.json'
-        #     merge_name = base_name + '-merges.txt'
-        #
-        #     if os.path.exists(vocab_name) and os.path.exists(merge_name):
-        #         logger.info('\ntrained encoder loaded')
-        #         self.istrained = True
-        #         if encoder_class == tokenizers.SentencePieceBPETokenizer:
-        #             return encoder_class(vocab_name, merge_name)
-        #         else:
-        #             return encoder_class(vocab_name, merge_name)
-        #     else:
-        #         self.istrained = False
-        #         logger.info('\n encoder needs to be trained')
-        #         self.train()
-        #         if encoder_class == tokenizers.SentencePieceBPETokenizer:
-        #             return encoder_class(vocab_name, merge_name)
-        #         else:
-        #             return self.encoder
+            vocab_name = base_name + '-vocab.json'
+            merge_name = base_name + '-merges.txt'
+
+            if os.path.exists(vocab_name) and os.path.exists(merge_name):
+                logger.info('\ntrained encoder loaded')
+                self.istrained = True
+                if encoder_class == tokenizers.SentencePieceBPETokenizer:
+                    return encoder_class(vocab_name, merge_name)
+                else:
+                    return encoder_class(vocab_name, merge_name)
+            else:
+                self.istrained = False
+                logger.info('\n encoder needs to be trained')
+                self.train()
+                if encoder_class == tokenizers.SentencePieceBPETokenizer:
+                    return encoder_class(vocab_name, merge_name)
+                else:
+                    return self.encoder

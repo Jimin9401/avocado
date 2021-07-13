@@ -29,7 +29,7 @@ class Dataset(Dataset):
 
 class Base_Batchfier(IterableDataset):
     def __init__(self, args, batch_size: int = 32, seq_len=512, minlen=50, maxlen: int = 512,
-                 criteria: str = 'lens', padding_index=70000, epoch_shuffle=False, device='cuda'):
+                 criteria: str = 'lens', padding_index=70000, epoch_shuffle=True, device='cuda'):
         super(Base_Batchfier).__init__()
         self.args = args
         self.maxlen = maxlen
@@ -78,7 +78,7 @@ class Base_Batchfier(IterableDataset):
 
 class CFBatchFier(Base_Batchfier):
     def __init__(self, args, df: pd.DataFrame, batch_size: int = 32, seq_len=512, minlen=50, maxlen: int = 512,
-                 criteria: str = 'lens', padding_index=0, epoch_shuffle=False, device='cuda'):
+                 criteria: str = 'lens', padding_index=0, epoch_shuffle=True, device='cuda'):
         super(CFBatchFier, self).__init__(args, batch_size, seq_len, minlen, maxlen, criteria, padding_index,
                                           epoch_shuffle,
                                           device)
@@ -145,7 +145,7 @@ class CFBatchFier(Base_Batchfier):
 
         attention_mask = text_ids == self.padding_index
 
-        return text_ids, attention_mask, pad_sequence(labels)
+        return text_ids, attention_mask, labels
 
 
     def collate_ner(self, batch):
