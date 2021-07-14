@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="9644ec73-d9e5-4f1c-916a-3471a3aeb465" name="avocado">
+        <fileTransfer rootFolder="/home/nas2_userG/jiminhong/projects/avocado" accessType="SFTP" host="143.248.159.145" port="8022" sshConfigId="2ccac320-a5b4-4c85-b6f9-2d7e73b17290" sshConfig="jiminhong@143.248.159.145:8022">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

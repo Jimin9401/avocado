@@ -5,6 +5,8 @@ import torch.nn as nn
 import torch
 from transformers import BertTokenizer, AdamW, BertModel
 import pandas as pd
+import os
+from gensim.models import Word2Vec  # for pair in pbar:
 
 
 
@@ -112,9 +114,6 @@ def inference_unoverlapped_word(w2v_vocab, bert_vocab, w_matrix, w2v_embedding_m
     pd.to_pickle("inexpensive_vocab_embedding.pkl")
 
 
-import os
-from gensim.models import Word2Vec  # for pair in pbar:
-
 
 #     w2v_matrix, bert_matrix = pair
 
@@ -125,8 +124,6 @@ def load_w2v_vocab(args):
 
     return w2v.wv.key_to_index, w2v.wv.vectors
 
-
-from attrdict import AttrDict
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -152,7 +149,6 @@ if __name__ == "__main__":
 
     w_matrix = align_w2v_with_bert(bert_matrix=bert_layer, w2v_embedding_matrix=embedding_matrix,
                                    overlapped_pairs=overlapped)
-
     out_path = os.path.join("../data/",args.dataset,"newly_added.pkl")
 
     out= {}

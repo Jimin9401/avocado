@@ -83,3 +83,25 @@ class ContrastivePreprocessor(BasicPreprocesor):
 
     def _tokenize(self, text):
         return self.tokenizer.encode(text)
+
+
+
+class ContrastivePreprocessor(BasicPreprocesor):
+    def __init__(self, data_dir, data_name, tokenizer: BertTokenizer, domain_tokenizer, train=False):
+        super(ContrastivePreprocessor, self).__init__(data_dir, data_name, tokenizer, train)
+        # self.data_dir = data_dir
+        self.domain_tokenizer = domain_tokenizer
+
+    def parse(self):
+        res = []
+        self.df["lens"] = [len(t) for t in self.df["text"].to_list()]
+
+        for i, row in tqdm(self.df.iterrows(), total=len(self.df)):
+            res.append(
+                {"text": self.tokenizer.encode(row["text"]), "domain_text": self.domain_tokenizer.encode(row["text"]),
+                 "label": self.label_map[row["label"]]})
+
+        return pd.DataFrame(res)
+
+    def _tokenize(self, text):
+        return self.tokenizer.encode(text)

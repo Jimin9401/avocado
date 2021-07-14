@@ -20,6 +20,7 @@ class Learner:
         self.pretrain_tokenizer = pretrain_tokenizer
         self.domain_tokenizer = domain_tokenizer
         self.pretrain_tokenizer.save_pretrained(self.vocab_path)
+
         self.unique_corpus = None
         self.init_fertility = init_feritility
 
@@ -88,7 +89,7 @@ class Learner:
 
 
 class BPELearner:
-    def __init__(self, args, pretrain_tokenizer: RobertaTokenizer, domain_tokenizer, init_fertility=2):
+    def __init__(self, args, config, pretrain_tokenizer: RobertaTokenizer, domain_tokenizer, init_fertility=2):
         self.vocab_path = args.vocab_path
         self.pretrain_tokenizer = pretrain_tokenizer
         self.init_fertility = init_fertility
@@ -97,6 +98,7 @@ class BPELearner:
             os.makedirs(args.vocab_path)
 
         self.pretrain_tokenizer.save_vocabulary(save_directory=self.vocab_path)
+        config.save_pretrained(save_directory=self.vocab_path)
         self.vocab_file = os.path.join(self.vocab_path, "vocab.json")
         self.merges_file = os.path.join(self.vocab_path, "merges.txt")
         print(self.vocab_file)

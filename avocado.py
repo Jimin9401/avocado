@@ -14,7 +14,7 @@ if __name__ == "__main__":
 
     args = CorpusArgument()
 
-    if args.encoder_class == "roberta-base":
+    if "roberta" in args.encoder_class:
         encoder_class = ByteLevelBPETokenizer
     else:
         encoder_class = BertWordPieceTokenizer
@@ -43,8 +43,8 @@ if __name__ == "__main__":
 
         unique_words = list(new_string.strip().replace("\n", " ").split(" "))
 
-        if args.encoder_class=="roberta-base":
-            learner = BPELearner(args, pretrained_tokenizer, domain_tokenizer.encoder)
+        if "roberta" in args.encoder_class:
+            learner = BPELearner(args, pretrained_config, pretrained_tokenizer, domain_tokenizer.encoder)
         else:
             learner = Learner(args, pretrained_config, pretrained_tokenizer, domain_tokenizer.encoder, )
         added_vocab = learner.update_tokenizer(unique_words, 50)

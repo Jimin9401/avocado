@@ -2,16 +2,16 @@
 
 export PYTHONPATH="${PYTHONPATH}:../"
 echo $PYTHONPATH
-EC=roberta-base # specify encoder
+EC=allenai/cs_roberta_base # specify encoder
 Data=citation_intent # specify dataset
 V=10000
-NGPU=0
+NGPU=4
 T=3.0
 LI=5
 AT=simclr
 CHECKPOINT=../ # specify checkpoint
 
-for Data in hyperpartisan_news
+for Data in citation_intent
 do
   for T in 0.5 1.0 1.5 2.0 2.5 3.0
   do
@@ -22,7 +22,7 @@ do
           --root data \
           --do_train \
           --seed $S \
-          --lr 2.0e-5 \
+          --lr 1.0e-5 \
           --gradient_accumulation_step 1 \
           --per_gpu_train_batch_size 16 \
           --n_epoch 50 \

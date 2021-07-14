@@ -9,7 +9,7 @@ class PretrainedTransformer(nn.Module):
         super(PretrainedTransformer, self).__init__()
         self.args = args
         self.encoder_class=encoder_class
-        self.main_net = BertModel.from_pretrained(encoder_class)
+        self.main_net = AutoModel.from_pretrained(encoder_class)
         self.hidden_size = self.main_net.config.hidden_size
         self.classifier = nn.Linear(self.hidden_size, n_class)
 

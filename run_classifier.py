@@ -52,12 +52,12 @@ def get_trainer(args, model, train_batchfier, test_batchfier):
     # decay_step=0
     # scheduler = WarmupLinearSchedule(optimizer, args.warmup_step, args.decay_step)
 
-    lr_scheduler = get_scheduler(
-        name=args.lr_scheduler_type,
-        optimizer=optimizer,
-        num_warmup_steps=args.num_warmup_steps,
-        num_training_steps=args.max_train_steps,
-    )
+    # lr_scheduler = get_scheduler(
+    #     name=args.lr_scheduler_type,
+    #     optimizer=optimizer,
+    #     num_warmup_steps=args.num_warmup_steps,
+    #     num_training_steps=args.max_train_steps,
+    # )
 
     criteria = nn.CrossEntropyLoss(ignore_index=-100)
 

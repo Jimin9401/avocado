@@ -1,20 +1,17 @@
 
-EC=google/electra-base-discriminator # specify encoder
+EC=bert-base-uncased # specify encoder
 Data=chemprot # specify dataset
-NGPU=2
-CHECKPOINT=checkpoint # specify checkpoint
+NGPU=5
+CHECKPOINT=checkpoint_other # specify checkpoint
 
 
 ## train at five seed
 
-
-
-
-for Data in citation_intent
+for Data in chemprot citation_intent
 do
   for S in 1994 1996 2015 1113 777
   do
-  CUDA_VISIBLE_DEVICES=$NGPU python run_classifier.py \
+  CUDA_VISIBLE_DEVICES=$NGPU python other_baselines.py \
       --dataset $Data \
       --root data \
       --do_train \
@@ -26,9 +23,11 @@ do
       --mixed_precision \
       --evaluate_during_training \
       --checkpoint_dir $CHECKPOINT \
+      --other \
       --encoder_class $EC ;
+
   done
-  CUDA_VISIBLE_DEVICES=$NGPU python run_classifier.py \
+  CUDA_VISIBLE_DEVICES=$NGPU python other_baselines.py \
   --dataset $Data \
   --root data \
   --do_test \
@@ -39,7 +38,8 @@ do
   --mixed_precision \
   --evaluate_during_training \
   --checkpoint_dir $CHECKPOINT \
-  --test_log_dir=test_log \
+  --test_log_dir=test_log_other \
+  --other \
   --encoder_class $EC;
 done
 

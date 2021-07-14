@@ -30,11 +30,12 @@ def parse_data(args):
 def get_dataset(args, tokenizer: BertTokenizer):
     res = {}
     data_dir = os.path.join(args.root, args.dataset)
-
     cache_dir = os.path.join(data_dir, "cache")
 
     if args.merge_version:
         cache_dir += "_merged"
+    elif args.other:
+        cache_dir += "_other"
 
     dataset_dir = os.path.join(cache_dir, args.encoder_class)
 

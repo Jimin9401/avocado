@@ -86,24 +86,24 @@ def get_batchfier(args, tokenizer):
     else:
         padding_idx = tokenizer.pad_token_id
         mask_idx = tokenizer.pad_token_id
-    if args.contrastive:
-        train_batch = ContrastiveBatchFier(args, train, batch_size=args.per_gpu_train_batch_size * n_gpu,
-                                           maxlen=args.seq_len,
-                                           padding_index=padding_idx, mask_idx=mask_idx)
-        dev_batch = ContrastiveBatchFier(args, dev, batch_size=args.per_gpu_eval_batch_size * n_gpu,
-                                         maxlen=args.seq_len,
-                                         padding_index=padding_idx, mask_idx=mask_idx)
-        test_batch = ContrastiveBatchFier(args, test, batch_size=args.per_gpu_eval_batch_size * n_gpu,
-                                          maxlen=args.seq_len,
-                                          padding_index=padding_idx, mask_idx=mask_idx)
 
-    else:
-        train_batch = CFBatchFier(args, train, batch_size=args.per_gpu_train_batch_size * n_gpu, maxlen=args.seq_len,
-                                  padding_index=padding_idx)
-        dev_batch = CFBatchFier(args, dev, batch_size=args.per_gpu_eval_batch_size * n_gpu, maxlen=args.seq_len,
-                                padding_index=padding_idx)
-        test_batch = CFBatchFier(args, test, batch_size=args.per_gpu_eval_batch_size * n_gpu, maxlen=args.seq_len,
-                                 padding_index=padding_idx)
+    train_batch = ContrastiveBatchFier(args, train, batch_size=args.per_gpu_train_batch_size * n_gpu,
+                                       maxlen=args.seq_len,
+                                       padding_index=padding_idx, mask_idx=mask_idx)
+    dev_batch = ContrastiveBatchFier(args, dev, batch_size=args.per_gpu_eval_batch_size * n_gpu,
+                                     maxlen=args.seq_len,
+                                     padding_index=padding_idx, mask_idx=mask_idx)
+    test_batch = ContrastiveBatchFier(args, test, batch_size=args.per_gpu_eval_batch_size * n_gpu,
+                                      maxlen=args.seq_len,
+                                      padding_index=padding_idx, mask_idx=mask_idx)
+
+    # else:
+    #     train_batch = CFBatchFier(args, train, batch_size=args.per_gpu_train_batch_size * n_gpu, maxlen=args.seq_len,
+    #                               padding_index=padding_idx)
+    #     dev_batch = CFBatchFier(args, dev, batch_size=args.per_gpu_eval_batch_size * n_gpu, maxlen=args.seq_len,
+    #                             padding_index=padding_idx)
+    #     test_batch = CFBatchFier(args, test, batch_size=args.per_gpu_eval_batch_size * n_gpu, maxlen=args.seq_len,
+    #                              padding_index=padding_idx)
 
     # from torch.utils.data import DataLoader
     # train_batchfier=DataLoader(train_batch,batch_size=train_batch.size,collate_fn=train_batch.collate)
@@ -158,8 +158,6 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(args.encoder_class)
     new_embedding_path = os.path.join(args.root,args.dataset,"newly_added.pkl")
     w2v_matrix = pd.read_pickle(new_embedding_path)
-
-
 
     new_tokens = list(w2v_matrix.keys())[:10000]
     args.extended_vocab_size = tokenizer.add_tokens(new_tokens)

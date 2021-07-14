@@ -24,7 +24,10 @@ class ExperimentArgument:
         parser.add_argument("--encoder_class",
                             choices=["bert-base-uncased", "dmis-lab/biobert-base-cased-v1.1",
                                      "nfliu/scibert_basevocab_uncased", "allenai/scibert_scivocab_uncased",
-                                     "xlnet-base-cased", "roberta-base", "google/electra-small-discriminator"],
+                                     "xlnet-base-cased", "roberta-base", "google/electra-small-discriminator",
+                                     "allenai/biomed_roberta_base", "google/electra-base-discriminator",
+                                     "allenai/cs_roberta_base", "allenai/news_roberta_base",
+                                     "allenai/reviews_roberta_base"],
                             required=True, type=str)
 
         parser.add_argument("--n_epoch", default=10, type=int)
@@ -48,10 +51,11 @@ class ExperimentArgument:
         parser.add_argument("--mixed_precision", action="store_true")
         parser.add_argument("--lr", default=1e-5, type=float)
         parser.add_argument("--merge_version", action="store_true")
-
         parser.add_argument("--bert_freeze", action="store_true")
         parser.add_argument("--contrastive", action="store_true")
         parser.add_argument("--exbert", action="store_true")
+        parser.add_argument("--other", action="store_true")
+
         parser.add_argument("--align_type", choices=["simclr"], default="simclr")
         parser.add_argument("--layer_index", default=5, type=int)
         parser.add_argument("--temperature", type=float, default=3.5)
@@ -208,7 +212,10 @@ class CorpusArgument:
 
         parser.add_argument("--encoder_class",
                             choices=["biobert", "bert-base-uncased", "dmis-lab/biobert-base-cased-v1.1",
-                                     "google/electra-small-discriminator", "nfliu/scibert_basevocab_uncased","roberta-base"],
+                                     "google/electra-small-discriminator", "nfliu/scibert_basevocab_uncased",
+                                     "roberta-base", "allenai/biomed_roberta_base", "google/electra-base-discriminator",
+                                     "allenai/cs_roberta_base", "allenai/news_roberta_base",
+                                     "allenai/reviews_roberta_base"],
                             default="bert-base-uncased", type=str)
         parser.add_argument("--use_fragment", action="store_true")
 

@@ -7,11 +7,12 @@ echo $PYTHONPATH
 #dmis-lab/biobert-base-cased-v1.1 allenai/scibert_scivocab_uncased nfliu/scibert_basevocab_uncased google/electra-small-discriminator
 #bert-base-uncased
 
-EC=roberta-base
+EC=google/electra-base-discriminator
 V=10000
-Data=chemprot
+Data=hyperpartisan_news
 
-for Data in citation_intent hyperpartisan_news amazon
+
+for EC in allenai/news_roberta_base
 do
   python avocado.py --dataset $Data \
     --root data \
