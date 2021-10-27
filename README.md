@@ -2,6 +2,10 @@
 
 # AVocaDo : Strategy for Adaptation Vocabulary to Downstream Domain
 
+An Domain-adaption approach by expanding domain-specified vocabulary using "fragment score". 
+AVocaDo can adapt various domain without requiring external resources. Check out our [website](https://arxiv.org/abs/2110.13434)  for the paper and more information.
+
+
 
 
 pytorch implementation
